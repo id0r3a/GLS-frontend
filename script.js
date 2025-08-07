@@ -1,5 +1,5 @@
 
-const backendUrl = "http://localhost:5228/api";
+const backendUrl = "https://carworkshop-api.azurewebsites.net/api";
 
 // ===== Kontaktformulär =====
 document.querySelector('#contactForm')?.addEventListener('submit', async (e) => {
