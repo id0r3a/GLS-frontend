@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontakta oss – Göteborgs Lack & Skadeverkstad</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header>
+    <img src="css/images/logo.png" alt="Logotyp" class="site-logo" />
+    <nav>
+      <ul>
+        <li><a href="index.html">Hem</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ===== Kontaktformulär ===== -->
+  <main>
+    <section class="form-section">
+      <h2>Kontakta oss</h2>
+
+      <p class="form-info">
+        Du är varmt välkommen att kontakta oss via e-post på
+        <a href="mailto:info@glsverkstad.com">info@glsverkstad.com</a>
+        eller på telefon
+        <a href="tel:+46734430424">+46 73 443 04 24</a>.
+        </p>
+
+        <p class="form-info">
+        Du kan även använda kontaktformuläret nedan för att skicka in dina uppgifter
+        tillsammans med en kort beskrivning av ditt ärende.
+        </p>
+
+        <p class="form-info">
+        Har du frågor kring pris eller önskar en preliminär bedömning, går det bra att
+        bifoga en bild på skadan direkt i formuläret.
+        </p>
+
+        <p class="form-info">
+        Vi återkommer till dig så snart som möjligt med mer information.
+        </p>
+
+
+      <form id="contactForm" enctype="multipart/form-data">
+        <div class="form-group">
+          <i class="fa fa-user"></i>
+          <input type="text" name="name" placeholder="Namn" required />
+        </div>
+        <div class="form-group">
+          <i class="fa fa-envelope"></i>
+          <input type="email" name="email" placeholder="E-post" required />
+        </div>
+        <div class="form-group">
+          <i class="fa fa-phone"></i>
+          <input type="text" name="phone" placeholder="Telefonnummer" />
+        </div>
+        <div class="form-group">
+          <i class="fa fa-tag"></i>
+          <input type="text" name="subject" placeholder="Ämne" />
+        </div>
+        <div class="form-group">
+          <i class="fa fa-comment"></i>
+          <textarea name="message" placeholder="Meddelande" rows="5" required></textarea>
+        </div>
+        <div class="form-group">
+          <i class="fa fa-image"></i>
+          <input type="file" name="attachment" accept="image/*" />
+        </div>
+        <button type="submit" class="submit-btn">Skicka</button>
+        <div id="contactResponse"></div>
+      </form>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="custom-footer">
+    <div class="footer-content">
+      <div class="footer-column">
+        <p>Zirkongatan 25D<br>Västra Frölunda, 421 64</p>
+        <p>info@glsverkstad.com<br>+46 73 443 04 24</p>
+      </div>
+      <div class="footer-column">
+        <h4>Öppettider</h4>
+        <p>Måndag – Fredag: 09:00 – 18:00<br>Lördag – Söndag: 10:00 – 16:00</p>
+      </div>
+      <div class="footer-column">
+        <h4>Följ & hitta oss</h4>
+        <a href="https://www.instagram.com/rafi.aslamii/" target="_blank" class="social-link">
+          <i class="fab fa-instagram"></i> Göteborgs Lack & Skadeverkstad
+        </a><br />
+        <a href="https://maps.app.goo.gl/YScwBrPygjPGDXQC7" target="_blank" class="social-link maps">
+        <i class="fas fa-map-marker-alt"></i> Google Maps
+      </a>
+    </div>
+    <div class="simple-footer">
+  <p>Copyright © Göteborgs Lack & Skadeverkstad 2025</p>
+</div>
+    </div>
+  </footer>
+
+  <!-- ===== JS ===== -->
+  <script>
+    document.getElementById("contactForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const responseBox = document.getElementById("contactResponse");
+
+      try {
+        const res = await fetch("http://localhost:5228/api/contact", {
+          method: "POST",
+          body: formData
+        });
+
+        if (res.ok) {
+          responseBox.textContent = "Tack för ditt meddelande! Vi kontaktar dig snart.";
+          responseBox.className = "success";
+          this.reset();
+        } else {
+          responseBox.textContent = "Ett fel uppstod. Försök igen.";
+          responseBox.className = "error";
+        }
+      } catch (error) {
+        responseBox.textContent = "Kunde inte skicka meddelandet.";
+        responseBox.className = "error";
+      }
+    });
+  </script>
+</body>
+</html>

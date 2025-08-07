@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boka tid – Göteborgs Lack & Skadeverkstad</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .scrollable {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header>
+    <img src="css/images/logo.png" alt="Göteborgs Lack & Skadeverkstad logotyp" class="site-logo" />
+    <!-- <h1>Boka tid</h1> -->
+    <nav>
+      <ul>
+        <li><a href="index.html">Hem</a></li>
+        <!-- <li><a href="kontakt.html">Kontakta oss</a></li> -->
+      </ul>
+    </nav>
+    <!-- <h2>Boka tid enkelt och snabbt</h2> -->
+  </header>
+
+  <!-- ===== Form Section ===== -->
+  <main>
+    <section class="form-section">
+      <h2>Vänligen fyll i dina uppgifter här nedan</h2>
+      <form id="bookingForm">
+        <div class="form-group">
+          <i class="fa fa-user"></i>
+          <input type="text" name="customerName" placeholder="Namn" required />
+        </div>
+        <div class="form-group">
+          <i class="fa fa-envelope"></i>
+          <input type="email" name="email" placeholder="E-post" required />
+        </div>
+        <div class="form-group">
+        <i class="fa fa-phone"></i>
+        <input type="tel" name="phone" placeholder="Telefonnummer" required />
+        </div>
+        <div class="form-group">
+          <i class="fa fa-car"></i>
+          <input type="text" name="registrationNumber" placeholder="Registreringsnummer" required />
+        </div>
+
+        <!-- Tjänster -->
+        <div class="form-group service-group">
+          <i class="fa fa-wrench"></i>
+          <div class="service-selector">
+            <div class="dropdown-wrapper">
+              <button type="button" class="dropdown-toggle" id="dropdownToggle">Välj tjänst</button>
+              <ul class="dropdown-menu scrollable" id="dropdownMenu"></ul>
+            </div>
+            <div id="selectedServicesContainer" class="tag-container"></div>
+            <input type="hidden" name="serviceType" id="selectedServices" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <i class="fa fa-calendar"></i>
+          <input type="date" name="bookingDate" required />
+        </div>
+        <div class="form-group">
+          <i class="fa fa-clock"></i>
+          <select name="bookingTime" id="bookingTime" required>
+            <option value="">Välj tid</option>
+          </select>
+        </div>
+
+        <button type="submit" class="submit-btn">Skicka bokning</button>
+        <div id="bookingResponse"></div>
+      </form>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="custom-footer">
+    <div class="footer-content">
+      <div class="footer-column">
+        <p>Zirkongatan 25D<br>Västra Frölunda, 421 64</p>
+        <p>info@glsverkstad.com<br>+46 73 443 04 24</p>
+      </div>
+      <div class="footer-column">
+        <h4>Öppettider</h4>
+        <p>Måndag – Fredag: 09:00 – 18:00<br>Lördag – Söndag: 10:00 – 16:00</p>
+      </div>
+      <div class="footer-column">
+        <h4>Följ & hitta oss</h4>
+        <a href="https://www.instagram.com/rafi.aslamii/" target="_blank" class="social-link">
+          <i class="fab fa-instagram"></i> Göteborgs Lack & Skadeverkstad
+        </a><br />
+        <a href="https://maps.app.goo.gl/YScwBrPygjPGDXQC7" target="_blank" class="social-link maps">
+        <i class="fas fa-map-marker-alt"></i> Google Maps
+      </a>
+    </div>
+    <div class="simple-footer">
+  <p>Copyright © Göteborgs Lack & Skadeverkstad 2025</p>
+</div>
+  </footer>
+
+  <!-- ===== JS ===== -->
+  <script>
+    const backendUrl = "http://localhost:5228/api";
+
+    const form = document.getElementById("bookingForm");
+    const dropdownToggle = document.getElementById("dropdownToggle");
+    const dropdownWrapper = dropdownToggle?.closest(".dropdown-wrapper");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const selectedContainer = document.getElementById("selectedServicesContainer");
+    const hiddenInput = document.getElementById("selectedServices");
+    const bookingDateInput = document.querySelector('input[name="bookingDate"]');
+    const bookingTimeSelect = document.getElementById("bookingTime");
+    const responseBox = document.getElementById("bookingResponse");
+
+    let selectedServices = [];
+    const allServices = [
+      "Lack/Plåtskador",
+      "Polering",
+      "Foliering",
+      "Paintless Dent Repair",
+      "Mekaniska reparationer",
+      "Laga/byta vindruta",
+      "Glasfiber"
+    ];
+
+    // Dropdown
+    function populateDropdown() {
+      dropdownMenu.innerHTML = "";
+      allServices.forEach(service => {
+        if (!selectedServices.includes(service)) {
+          const li = document.createElement("li");
+          li.setAttribute("data-value", service);
+          li.textContent = service;
+          dropdownMenu.appendChild(li);
+        }
+      });
+    }
+
+    populateDropdown();
+
+    dropdownToggle.addEventListener("click", () => {
+      dropdownWrapper?.classList.toggle("open");
+    });
+
+    dropdownMenu?.addEventListener("click", (e) => {
+      if (e.target.tagName === "LI") {
+        const value = e.target.getAttribute("data-value");
+        if (!selectedServices.includes(value)) {
+          selectedServices.push(value);
+          renderTags();
+          populateDropdown();
+        }
+        dropdownWrapper.classList.remove("open");
+      }
+    });
+
+    function renderTags() {
+      selectedContainer.innerHTML = "";
+      selectedServices.forEach(service => {
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        tag.innerHTML = `
+          ${service}
+          <button class="remove-tag" data-service="${service}">&times;</button>
+        `;
+        selectedContainer.appendChild(tag);
+      });
+      hiddenInput.value = selectedServices.join(",");
+    }
+
+    selectedContainer.addEventListener("click", (e) => {
+      if (e.target.classList.contains("remove-tag")) {
+        const serviceToRemove = e.target.dataset.service;
+        selectedServices = selectedServices.filter(s => s !== serviceToRemove);
+        renderTags();
+        populateDropdown();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (dropdownWrapper && !dropdownWrapper.contains(e.target)) {
+        dropdownWrapper.classList.remove("open");
+      }
+    });
+
+    // Tidsval: endast öppettider & kvartsteg
+    function generateTimeOptions(startHour, endHour) {
+      const allowedMinutes = [0, 15, 30, 45];
+      const options = [];
+
+      for (let h = startHour; h <= endHour; h++) {
+        for (let m of allowedMinutes) {
+          const hour = h.toString().padStart(2, "0");
+          const min = m.toString().padStart(2, "0");
+          options.push(`${hour}:${min}`);
+        }
+      }
+
+      return options;
+    }
+
+    function updateTimeSelect() {
+      const selectedDate = new Date(bookingDateInput.value);
+      if (isNaN(selectedDate)) return;
+
+      const day = selectedDate.getDay(); // 0 = Söndag, 6 = Lördag
+      const isWeekend = (day === 0 || day === 6);
+
+      const startHour = isWeekend ? 10 : 9;
+      const endHour = isWeekend ? 15 : 17;
+
+      const times = generateTimeOptions(startHour, endHour);
+      bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
+      times.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t + ":00";
+        opt.textContent = t;
+        bookingTimeSelect.appendChild(opt);
+      });
+    }
+
+    bookingDateInput?.addEventListener("change", updateTimeSelect);
+
+    // Skicka formulär
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const json = Object.fromEntries(formData);
+
+      json.serviceType = json.serviceType?.split(',').map(s => s.trim());
+      if (json.bookingTime) json.bookingTime = json.bookingTime;
+
+      try {
+        const res = await fetch(`${backendUrl}/booking`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(json)
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          responseBox.textContent = result.message || "Din bokning har skickats!";
+          responseBox.className = "success";
+          form.reset();
+          selectedServices = [];
+          renderTags();
+          updateTimeSelect();
+        } else {
+          responseBox.textContent = result.message || "Ett fel inträffade.";
+          responseBox.className = "error";
+        }
+      } catch (err) {
+        responseBox.textContent = "Kunde inte kontakta servern.";
+        responseBox.className = "error";
+      }
+    });
+  </script>
+
+</body>
+</html>

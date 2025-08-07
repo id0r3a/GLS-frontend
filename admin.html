@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>Adminpanel – Bokningar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f8f8f8;
+    }
+    h1 {
+      text-align: center;
+    }
+    input {
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      width: 300px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #eee;
+      cursor: pointer;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin – Bokningar</h1>
+
+  <input type="text" id="search" placeholder="🔍 Sök på namn, bilmodell eller registreringsnummer...">
+
+  <table>
+    <thead>
+      <tr>
+        <th onclick="sortBy('customerName')">Namn</th>
+        <th onclick="sortBy('email')">E-post</th>
+        <th onclick="sortBy('registrationNumber')">Reg.nr</th>
+        <th onclick="sortBy('carModel')">Bilmodell</th>
+        <th onclick="sortBy('serviceType')">Service</th>
+        <th onclick="sortBy('bookingDate')">Datum</th>
+      </tr>
+    </thead>
+    <tbody id="bookingTable"></tbody>
+  </table>
+
+  <script>
+    let bookings = [];
+    let currentSort = 'bookingDate';
+    let ascending = false;
+
+    async function fetchBookings() {
+      try {
+        const response = await fetch("http://localhost:5228/api/booking");
+        if (!response.ok) throw new Error("Servern svarade inte korrekt.");
+        bookings = await response.json();
+        renderTable(bookings);
+      } catch (error) {
+        alert("Kunde inte hämta bokningar: " + error.message);
+      }
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById("bookingTable");
+      tbody.innerHTML = "";
+
+      data.forEach(b => {
+        const row = `<tr>
+          <td>${b.customerName}</td>
+          <td>${b.email}</td>
+          <td>${b.registrationNumber}</td>
+          <td>${b.carModel}</td>
+          <td>${b.serviceType}</td>
+          <td>${new Date(b.bookingDate).toLocaleString()}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function sortBy(field) {
+      ascending = (currentSort === field) ? !ascending : true;
+      currentSort = field;
+
+      bookings.sort((a, b) => {
+        if (field === 'bookingDate') {
+          return ascending
+            ? new Date(a[field]) - new Date(b[field])
+            : new Date(b[field]) - new Date(a[field]);
+        }
+        return ascending
+          ? a[field].localeCompare(b[field])
+          : b[field].localeCompare(a[field]);
+      });
+
+      renderTable(bookings);
+    }
+
+    document.getElementById("search").addEventListener("input", (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtered = bookings.filter(b =>
+        b.customerName.toLowerCase().includes(term) ||
+        b.email.toLowerCase().includes(term) ||
+        b.registrationNumber.toLowerCase().includes(term) ||
+        b.carModel.toLowerCase().includes(term) ||
+        b.serviceType.toLowerCase().includes(term)
+      );
+      renderTable(filtered);
+    });
+
+    fetchBookings();
+  </script>
+</body>
+</html>
