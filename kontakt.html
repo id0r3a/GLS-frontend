@@ -29,22 +29,21 @@
         <a href="mailto:info@glsverkstad.com">info@glsverkstad.com</a>
         eller på telefon
         <a href="tel:+46734430424">+46 73 443 04 24</a>.
-        </p>
+      </p>
 
-        <p class="form-info">
+      <p class="form-info">
         Du kan även använda kontaktformuläret nedan för att skicka in dina uppgifter
         tillsammans med en kort beskrivning av ditt ärende.
-        </p>
+      </p>
 
-        <p class="form-info">
+      <p class="form-info">
         Har du frågor kring pris eller önskar en preliminär bedömning, går det bra att
         bifoga en bild på skadan direkt i formuläret.
-        </p>
+      </p>
 
-        <p class="form-info">
+      <p class="form-info">
         Vi återkommer till dig så snart som möjligt med mer information.
-        </p>
-
+      </p>
 
       <form id="contactForm" enctype="multipart/form-data">
         <div class="form-group">
@@ -94,38 +93,46 @@
           <i class="fab fa-instagram"></i> Göteborgs Lack & Skadeverkstad
         </a><br />
         <a href="https://maps.app.goo.gl/YScwBrPygjPGDXQC7" target="_blank" class="social-link maps">
-        <i class="fas fa-map-marker-alt"></i> Google Maps
-      </a>
+          <i class="fas fa-map-marker-alt"></i> Google Maps
+        </a>
+      </div>
     </div>
     <div class="simple-footer">
-  <p>Copyright © Göteborgs Lack & Skadeverkstad 2025</p>
-</div>
+      <p>Copyright © Göteborgs Lack & Skadeverkstad 2025</p>
     </div>
   </footer>
 
   <!-- ===== JS ===== -->
   <script>
+    // Bas-URL till ditt Azure-API
+    const API = "https://carworkshop-api.azurewebsites.net/api";
+
     document.getElementById("contactForm").addEventListener("submit", async function (e) {
       e.preventDefault();
       const formData = new FormData(this);
       const responseBox = document.getElementById("contactResponse");
 
       try {
-        const res = await fetch("http://localhost:5228/api/contact", {
+        // Viktigt: posta till rätt endpoint
+        const res = await fetch(`${API}/contact`, {
           method: "POST",
-          body: formData
+          body: formData // låt browsern sätta Content-Type (multipart/form-data; boundary=...)
         });
 
+        let payload = {};
+        try { payload = await res.json(); } catch {}
+
         if (res.ok) {
-          responseBox.textContent = "Tack för ditt meddelande! Vi kontaktar dig snart.";
+          responseBox.textContent = payload.message || "Tack för ditt meddelande! Vi kontaktar dig snart.";
           responseBox.className = "success";
           this.reset();
         } else {
-          responseBox.textContent = "Ett fel uppstod. Försök igen.";
+          responseBox.textContent = payload.message || `Ett fel uppstod (${res.status}). Försök igen.`;
           responseBox.className = "error";
         }
       } catch (error) {
-        responseBox.textContent = "Kunde inte skicka meddelandet.";
+        console.error(error);
+        responseBox.textContent = "Kunde inte skicka meddelandet (nätverksfel).";
         responseBox.className = "error";
       }
     });

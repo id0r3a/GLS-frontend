@@ -1,4 +1,4 @@
-const backendUrl = "http://localhost:5228/api";
+const backendUrl = "https://carworkshop-api.azurewebsites.net/api";
 
 const form = document.getElementById("damageInspectionForm");
 const timeSelect = document.getElementById("damageTime");

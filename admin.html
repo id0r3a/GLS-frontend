@@ -56,69 +56,77 @@
   </table>
 
   <script>
-    let bookings = [];
-    let currentSort = 'bookingDate';
-    let ascending = false;
+    document.addEventListener("DOMContentLoaded", () => {
+      let bookings = [];
+      let currentSort = 'bookingDate';
+      let ascending = false;
 
-    async function fetchBookings() {
-      try {
-        const response = await fetch("http://localhost:5228/api/booking");
-        if (!response.ok) throw new Error("Servern svarade inte korrekt.");
-        bookings = await response.json();
-        renderTable(bookings);
-      } catch (error) {
-        alert("Kunde inte hämta bokningar: " + error.message);
-      }
-    }
-
-    function renderTable(data) {
-      const tbody = document.getElementById("bookingTable");
-      tbody.innerHTML = "";
-
-      data.forEach(b => {
-        const row = `<tr>
-          <td>${b.customerName}</td>
-          <td>${b.email}</td>
-          <td>${b.registrationNumber}</td>
-          <td>${b.carModel}</td>
-          <td>${b.serviceType}</td>
-          <td>${new Date(b.bookingDate).toLocaleString()}</td>
-        </tr>`;
-        tbody.innerHTML += row;
-      });
-    }
-
-    function sortBy(field) {
-      ascending = (currentSort === field) ? !ascending : true;
-      currentSort = field;
-
-      bookings.sort((a, b) => {
-        if (field === 'bookingDate') {
-          return ascending
-            ? new Date(a[field]) - new Date(b[field])
-            : new Date(b[field]) - new Date(a[field]);
+      async function fetchBookings() {
+        try {
+          const response = await fetch("https://carworkshop-api.azurewebsites.net/api/booking");
+          if (!response.ok) throw new Error("Servern svarade inte korrekt.");
+          bookings = await response.json();
+          renderTable(bookings);
+        } catch (error) {
+          alert("Kunde inte hämta bokningar: " + error.message);
         }
-        return ascending
-          ? a[field].localeCompare(b[field])
-          : b[field].localeCompare(a[field]);
+      }
+
+      function renderTable(data) {
+        const tbody = document.getElementById("bookingTable");
+        let html = "";
+
+        data.forEach(b => {
+          const serviceList = Array.isArray(b.serviceType) ? b.serviceType.join(", ") : (b.serviceType || "");
+          const dateObj = new Date(b.bookingDate);
+          const formattedDate = dateObj.toLocaleDateString("sv-SE");
+          const formattedTime = dateObj.toLocaleTimeString("sv-SE", { hour: '2-digit', minute: '2-digit' });
+
+          html += `<tr>
+            <td>${b.customerName || ""}</td>
+            <td>${b.email || ""}</td>
+            <td>${b.registrationNumber || ""}</td>
+            <td>${b.carModel || ""}</td>
+            <td>${serviceList}</td>
+            <td>${formattedDate} ${formattedTime}</td>
+          </tr>`;
+        });
+
+        tbody.innerHTML = html;
+      }
+
+      window.sortBy = function(field) {
+        ascending = (currentSort === field) ? !ascending : true;
+        currentSort = field;
+
+        bookings.sort((a, b) => {
+          if (field === 'bookingDate') {
+            return ascending
+              ? new Date(a[field]) - new Date(b[field])
+              : new Date(b[field]) - new Date(a[field]);
+          }
+          return ascending
+            ? (a[field] || "").toString().localeCompare((b[field] || "").toString())
+            : (b[field] || "").toString().localeCompare((a[field] || "").toString());
+        });
+
+        renderTable(bookings);
+      };
+
+      document.getElementById("search").addEventListener("input", (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = bookings.filter(b =>
+          (b.customerName || "").toLowerCase().includes(term) ||
+          (b.email || "").toLowerCase().includes(term) ||
+          (b.registrationNumber || "").toLowerCase().includes(term) ||
+          (b.carModel || "").toLowerCase().includes(term) ||
+          (Array.isArray(b.serviceType) ? b.serviceType.join(", ") : (b.serviceType || "")).toLowerCase().includes(term)
+        );
+        renderTable(filtered);
       });
 
-      renderTable(bookings);
-    }
-
-    document.getElementById("search").addEventListener("input", (e) => {
-      const term = e.target.value.toLowerCase();
-      const filtered = bookings.filter(b =>
-        b.customerName.toLowerCase().includes(term) ||
-        b.email.toLowerCase().includes(term) ||
-        b.registrationNumber.toLowerCase().includes(term) ||
-        b.carModel.toLowerCase().includes(term) ||
-        b.serviceType.toLowerCase().includes(term)
-      );
-      renderTable(filtered);
+      fetchBookings();
     });
-
-    fetchBookings();
   </script>
 </body>
 </html>

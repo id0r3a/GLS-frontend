@@ -18,14 +18,11 @@
   <!-- ===== Header ===== -->
   <header>
     <img src="css/images/logo.png" alt="Göteborgs Lack & Skadeverkstad logotyp" class="site-logo" />
-    <!-- <h1>Boka tid</h1> -->
     <nav>
       <ul>
         <li><a href="index.html">Hem</a></li>
-        <!-- <li><a href="kontakt.html">Kontakta oss</a></li> -->
       </ul>
     </nav>
-    <!-- <h2>Boka tid enkelt och snabbt</h2> -->
   </header>
 
   <!-- ===== Form Section ===== -->
@@ -42,8 +39,8 @@
           <input type="email" name="email" placeholder="E-post" required />
         </div>
         <div class="form-group">
-        <i class="fa fa-phone"></i>
-        <input type="tel" name="phone" placeholder="Telefonnummer" required />
+          <i class="fa fa-phone"></i>
+          <input type="tel" name="phone" placeholder="Telefonnummer" required />
         </div>
         <div class="form-group">
           <i class="fa fa-car"></i>
@@ -55,8 +52,10 @@
           <i class="fa fa-wrench"></i>
           <div class="service-selector">
             <div class="dropdown-wrapper">
-              <button type="button" class="dropdown-toggle" id="dropdownToggle">Välj tjänst</button>
-              <ul class="dropdown-menu scrollable" id="dropdownMenu"></ul>
+              <button type="button" class="dropdown-toggle" id="dropdownToggle" aria-haspopup="listbox" aria-expanded="false">
+                Välj tjänst
+              </button>
+              <ul class="dropdown-menu scrollable" id="dropdownMenu" role="listbox"></ul>
             </div>
             <div id="selectedServicesContainer" class="tag-container"></div>
             <input type="hidden" name="serviceType" id="selectedServices" />
@@ -97,17 +96,18 @@
           <i class="fab fa-instagram"></i> Göteborgs Lack & Skadeverkstad
         </a><br />
         <a href="https://maps.app.goo.gl/YScwBrPygjPGDXQC7" target="_blank" class="social-link maps">
-        <i class="fas fa-map-marker-alt"></i> Google Maps
-      </a>
+          <i class="fas fa-map-marker-alt"></i> Google Maps
+        </a>
+      </div>
+      <div class="simple-footer">
+        <p>Copyright © Göteborgs Lack & Skadeverkstad 2025</p>
+      </div>
     </div>
-    <div class="simple-footer">
-  <p>Copyright © Göteborgs Lack & Skadeverkstad 2025</p>
-</div>
   </footer>
 
   <!-- ===== JS ===== -->
   <script>
-    const backendUrl = "http://localhost:5228/api";
+    const backendUrl = "https://carworkshop-api.azurewebsites.net/api";
 
     const form = document.getElementById("bookingForm");
     const dropdownToggle = document.getElementById("dropdownToggle");
@@ -130,7 +130,7 @@
       "Glasfiber"
     ];
 
-    // Dropdown
+    // Fyll dropdown
     function populateDropdown() {
       dropdownMenu.innerHTML = "";
       allServices.forEach(service => {
@@ -145,11 +145,14 @@
 
     populateDropdown();
 
-    dropdownToggle.addEventListener("click", () => {
+    // Dropdown toggle
+    dropdownToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
       dropdownWrapper?.classList.toggle("open");
     });
 
     dropdownMenu?.addEventListener("click", (e) => {
+      e.stopPropagation();
       if (e.target.tagName === "LI") {
         const value = e.target.getAttribute("data-value");
         if (!selectedServices.includes(value)) {
@@ -159,6 +162,10 @@
         }
         dropdownWrapper.classList.remove("open");
       }
+    });
+
+    document.addEventListener("click", () => {
+      dropdownWrapper?.classList.remove("open");
     });
 
     function renderTags() {
@@ -184,13 +191,7 @@
       }
     });
 
-    document.addEventListener("click", (e) => {
-      if (dropdownWrapper && !dropdownWrapper.contains(e.target)) {
-        dropdownWrapper.classList.remove("open");
-      }
-    });
-
-    // Tidsval: endast öppettider & kvartsteg
+    // Tidsval baserat på öppettider
     function generateTimeOptions(startHour, endHour) {
       const allowedMinutes = [0, 15, 30, 45];
       const options = [];
@@ -210,11 +211,11 @@
       const selectedDate = new Date(bookingDateInput.value);
       if (isNaN(selectedDate)) return;
 
-      const day = selectedDate.getDay(); // 0 = Söndag, 6 = Lördag
+      const day = selectedDate.getDay();
       const isWeekend = (day === 0 || day === 6);
 
       const startHour = isWeekend ? 10 : 9;
-      const endHour = isWeekend ? 15 : 17;
+      const endHour = isWeekend ? 16 : 18;
 
       const times = generateTimeOptions(startHour, endHour);
       bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
@@ -234,8 +235,10 @@
       const formData = new FormData(form);
       const json = Object.fromEntries(formData);
 
-      json.serviceType = json.serviceType?.split(',').map(s => s.trim());
-      if (json.bookingTime) json.bookingTime = json.bookingTime;
+      json.serviceType = (json.serviceType || "")
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean);
 
       try {
         const res = await fetch(`${backendUrl}/booking`, {
@@ -251,7 +254,7 @@
           form.reset();
           selectedServices = [];
           renderTags();
-          updateTimeSelect();
+          bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
         } else {
           responseBox.textContent = result.message || "Ett fel inträffade.";
           responseBox.className = "error";

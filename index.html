@@ -2,8 +2,19 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Göteborgs Lack & Skadeverkstad</title>
+
+  <!-- SEO -->
+  <meta name="description" content="GLS Verkstad i Göteborg – lack & plåtskador, foliering, glasfiber, bilglas, polering och mekaniska reparationer. Boka skadebesiktning online." />
+  <link rel="canonical" href="https://golden-swan-1c0dcb.netlify.app/" />
+
+  <!-- Open Graph (delningar) -->
+  <meta property="og:title" content="Göteborgs Lack & Skadeverkstad" />
+  <meta property="og:description" content="Specialist på lack & plåtskador, foliering, glasfiber och bilglas i Göteborg. Boka skadebesiktning online." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="css/images/logo.png" />
+
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
@@ -11,121 +22,128 @@
 
   <!-- ===== Header ===== -->
   <header>
-  <div class="header-container">
-    <img src="css/images/logo.png" alt="GLS Verkstad logotyp" class="site-logo" />
-    <nav>
-      <ul>
-        <li><a href="index.html">Hem</a></li>
-        <li><a href="skadebesiktning.html">Skadebesiktning</a></li>
-        <li><a href="kontakt.html">Kontakta oss</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-  <!-- ===== Hero Section ===== -->
-  <section class="hero">
-  <h2>Vi reparerar med precision och passion</h2>
-  <p>Din specialist på lack- och plåtskador, foliering, glasfiber och bilglas i Göteborg.</p>
-  <a href="boka.html" class="hero-btn">Boka tid</a>
-</section>
-
-  <!-- ===== Tjänster ===== -->
-  <section class="container">
-  <h2>Våra Tjänster</h2>
-  <div class="services-grid">
-
-    <div class="service-box">
-      <img src="css/images/foljering.png" alt="Foliering">
-      <h3>Foliering</h3>
-      <div class="service-desc">
-        <p>Skydda din bil och ge den ett unikt utseende med specialfolier.</p>
-        <span class="price">Pris: ca 25 000 SEK</span>
-      </div>
+    <div class="header-container">
+      <a href="index.html" class="site-logo-link" aria-label="GLS Verkstad startsida">
+        <img src="css/images/logo.png" alt="GLS Verkstad logotyp" class="site-logo" loading="eager" width="200" height="60" />
+      </a>
+      <nav aria-label="Huvudmeny">
+        <ul>
+          <li><a href="index.html" aria-current="page">Hem</a></li>
+          <li><a href="skadebesiktning.html">Skadebesiktning</a></li>
+          <li><a href="kontakt.html">Kontakta oss</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
 
-    <div class="service-box">
-      <img src="css/images/plåtskador.webp" alt="Lackering & Plåtskador">
-      <h3>Lackering & Plåtskador</h3>
-      <div class="service-desc">
-        <p>Vi åtgärdar bucklor, repor och andra skador på karossen snabbt och effektivt.</p>
-        <span class="price">Pris: 2 500 SEK / karosseridel</span>
+  <!-- ===== Main ===== -->
+  <main>
+
+    <!-- ===== Hero Section ===== -->
+    <section class="hero">
+      <h1>Vi reparerar med precision och passion</h1>
+      <p>Din specialist på lack- och plåtskador, foliering, glasfiber och bilglas i Göteborg.</p>
+      <a href="skadebesiktning.html" class="hero-btn">Boka skadebesiktning</a>
+    </section>
+
+    <!-- ===== Tjänster ===== -->
+    <section class="container" aria-labelledby="services-heading">
+      <h2 id="services-heading">Våra Tjänster</h2>
+
+      <div class="services-grid">
+
+        <article class="service-box">
+          <img src="css/images/foljering.png" alt="Foliering av bil" loading="lazy" width="640" height="426">
+          <h3>Foliering</h3>
+          <div class="service-desc">
+            <p>Skydda din bil och ge den ett unikt utseende med specialfolier.</p>
+            <span class="price">Pris: ca 25&nbsp;000 SEK</span>
+          </div>
+        </article>
+
+        <article class="service-box">
+          <img src="css/images/plåtskador.webp" alt="Reparation av lackering och plåtskador" loading="lazy" width="640" height="426">
+          <h3>Lackering &amp; Plåtskador</h3>
+          <div class="service-desc">
+            <p>Vi åtgärdar bucklor, repor och andra skador på karossen snabbt och effektivt.</p>
+            <span class="price">Pris: 2&nbsp;500 SEK / karosseridel</span>
+          </div>
+        </article>
+
+        <article class="service-box">
+          <img src="css/images/polering.webp" alt="Polering av lack" loading="lazy" width="640" height="426">
+          <h3>Polering</h3>
+          <div class="service-desc">
+            <p>Få tillbaka nybilskänslan med vår noggranna poleringstjänst.</p>
+            <span class="price">Pris: 3&nbsp;000 SEK</span>
+          </div>
+        </article>
+
+        <article class="service-box">
+          <img src="css/images/paintlessdentrepair.webp" alt="Paintless Dent Repair – buckelborttagning utan omlack" loading="lazy" width="640" height="426">
+          <h3>Paintless Dent Repair</h3>
+          <div class="service-desc">
+            <p>Ta bort små bucklor utan att skada lacken – miljövänligt och effektivt.</p>
+            <span class="price">Pris: 450 SEK / dörruppslag</span>
+          </div>
+        </article>
+
+        <article class="service-box">
+          <img src="css/images/servicebil.jpg" alt="Mekaniska reparationer" loading="lazy" width="640" height="426">
+          <h3>Mekaniska reparationer</h3>
+          <div class="service-desc">
+            <p>Fullständig bilservice inklusive oljebyte, bromsar och filterkontroll.</p>
+            <span class="price">Pris: 650 SEK / timme</span>
+          </div>
+        </article>
+
+        <article class="service-box">
+          <img src="css/images/glasbyte.jpg" alt="Byte eller reparation av vindruta" loading="lazy" width="640" height="426">
+          <h3>Laga/byta vindruta</h3>
+          <div class="service-desc">
+            <p>Byte eller reparation av spruckna och skadade rutor med originaldelar.</p>
+            <span class="price">Pris: 700 SEK / timme</span>
+          </div>
+        </article>
+
+        <article class="service-box">
+          <img src="css/images/fiberglass.jpg" alt="Reparation av plast och glasfiber" loading="lazy" width="640" height="426">
+          <h3>Plast &amp; glasfiber reparation</h3>
+          <div class="service-desc">
+            <p>Reparation av glasfiberskador på kaross och komponenter med hög hållbarhet.</p>
+            <span class="price">Pris: 600 SEK / timme</span>
+          </div>
+        </article>
+
       </div>
-    </div>
-
-    <div class="service-box">
-      <img src="css/images/polering.webp" alt="Polering">
-      <h3>Polering</h3>
-      <div class="service-desc">
-        <p>Få tillbaka nybilskänslan med vår noggranna poleringstjänst.</p>
-        <span class="price">Pris: 3 000 SEK</span>
-      </div>
-    </div>
-
-    <div class="service-box">
-      <img src="css/images/paintlessdentrepair.webp" alt="Paintless Dent Repair">
-      <h3>Paintless Dent Repair</h3>
-      <div class="service-desc">
-        <p>Ta bort små bucklor utan att skada lacken – miljövänligt och effektivt.</p>
-        <span class="price">Pris: 450 SEK / dörruppslag</span>
-      </div>
-    </div>
-
-    <div class="service-box">
-      <img src="css/images/servicebil.jpg" alt="Mekaniska reparationer">
-      <h3>Mekaniska reparationer</h3>
-      <div class="service-desc">
-        <p>Fullständig bilservice inklusive oljebyte, bromsar och filterkontroll.</p>
-        <span class="price">Pris: 650 SEK / timme</span>
-      </div>
-    </div>
-
-    <div class="service-box">
-      <img src="css/images/glasbyte.jpg" alt="Laga/byta vindruta">
-      <h3>Laga/byta vindruta</h3>
-      <div class="service-desc">
-        <p>Byte eller reparation av spruckna och skadade rutor med originaldelar.</p>
-        <span class="price">Pris: 700 SEK / timme</span>
-      </div>
-    </div>
-
-    <div class="service-box">
-      <img src="css/images/fiberglass.jpg" alt="Plast & glasfiber reparation">
-      <h3>Plast & glasfiber reparation</h3>
-      <div class="service-desc">
-        <p>Reparation av glasfiberskador på kaross och komponenter med hög hållbarhet.</p>
-        <span class="price">Pris: 600 SEK / timme</span>
-      </div>
-    </div>
-
-  </div>
-</section>
-
+    </section>
+  </main>
 
   <!-- ===== Footer ===== -->
   <footer class="custom-footer">
-  <div class="footer-content">
-    <div class="footer-column">
-      <p>Zirkongatan 25D<br>Västra Frölunda, 421 64</p>
-        <p>info@glsverkstad.com<br>+46 73 443 04 24</p>
-    </div>
-    <div class="footer-column">
-      <h4>Öppettider</h4>
-      <p>Måndag – Fredag: 09:00 – 18:00<br>Lördag – Söndag: 10:00 – 16:00</p>
-    </div>
-    <div class="footer-column">
-      <h4>Följ & hitta oss</h4>
-      <a href="https://www.instagram.com/rafi.aslamii/" target="_blank" class="social-link">
-        <i class="fab fa-instagram"></i> Göteborgs Lack & Skadeverkstad
-      </a>
-      <br />
-      <a href="https://maps.app.goo.gl/YScwBrPygjPGDXQC7" target="_blank" class="social-link maps">
-        <i class="fas fa-map-marker-alt"></i> Google Maps
-      </a>
+    <div class="footer-content">
+      <div class="footer-column">
+        <p>Zirkongatan 25D<br>Västra Frölunda, 421 64</p>
+        <p><a href="mailto:info@glsverkstad.com">info@glsverkstad.com</a><br><a href="tel:+46734430424">+46 73 443 04 24</a></p>
+      </div>
+      <div class="footer-column">
+        <h4>Öppettider</h4>
+        <p>Måndag – Fredag: 09:00 – 18:00<br>Lördag – Söndag: 10:00 – 16:00</p>
+      </div>
+      <div class="footer-column">
+        <h4>Följ &amp; hitta oss</h4>
+        <a href="https://www.instagram.com/rafi.aslamii/" target="_blank" rel="noopener" class="social-link">
+          <i class="fab fa-instagram"></i> Göteborgs Lack &amp; Skadeverkstad
+        </a><br />
+        <a href="https://maps.app.goo.gl/YScwBrPygjPGDXQC7" target="_blank" rel="noopener" class="social-link maps">
+          <i class="fas fa-map-marker-alt"></i> Google Maps
+        </a>
+      </div>
     </div>
     <div class="simple-footer">
-  <p>Copyright © Göteborgs Lack & Skadeverkstad 2025</p>
-</div>
-  </div>
-</footer>
+      <p>Copyright © Göteborgs Lack &amp; Skadeverkstad 2025</p>
+    </div>
+  </footer>
+
 </body>
 </html>

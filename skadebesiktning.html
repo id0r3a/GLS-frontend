@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Skadebesiktning – GLS Verkstad</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
@@ -22,33 +22,40 @@
   <main>
     <section class="form-section">
       <h2>Boka Skadebesiktning</h2>
+
       <form id="damageInspectionForm">
         <div class="form-group">
           <i class="fa fa-user"></i>
           <input type="text" name="customerName" placeholder="Namn" required />
         </div>
+
         <div class="form-group">
           <i class="fa fa-envelope"></i>
           <input type="email" name="email" placeholder="E-post" required />
         </div>
+
         <div class="form-group">
-        <i class="fa fa-phone"></i>
-        <input type="tel" name="phone" placeholder="Telefonnummer" required />
+          <i class="fa fa-phone"></i>
+          <input type="tel" name="phone" placeholder="Telefonnummer" required />
         </div>
+
         <div class="form-group">
           <i class="fa fa-car"></i>
           <input type="text" name="registrationNumber" placeholder="Registreringsnummer" required />
         </div>
+
         <div class="form-group">
           <i class="fa fa-calendar"></i>
-          <input type="date" name="bookingDate" required />
+          <input type="date" name="bookingDate" id="bookingDate" required />
         </div>
+
         <div class="form-group">
           <i class="fa fa-clock"></i>
           <select name="bookingTime" id="damageTime" required>
             <option value="">Välj tid</option>
           </select>
         </div>
+
         <button type="submit" class="submit-btn">Boka skadebesiktning</button>
         <div id="damageResponse"></div>
       </form>
@@ -57,7 +64,6 @@
 
   <!-- ===== Footer ===== -->
   <footer class="custom-footer">
-    <!-- Samma footer som andra sidor -->
     <div class="footer-content">
       <div class="footer-column">
         <p>Zirkongatan 25D<br>Västra Frölunda, 421 64</p>
@@ -73,15 +79,22 @@
           <i class="fab fa-instagram"></i> Göteborgs Lack & Skadeverkstad
         </a><br />
         <a href="https://maps.app.goo.gl/YScwBrPygjPGDXQC7" target="_blank" class="social-link maps">
-        <i class="fas fa-map-marker-alt"></i> Google Maps
-      </a>
+          <i class="fas fa-map-marker-alt"></i> Google Maps
+        </a>
+      </div>
     </div>
     <div class="simple-footer">
-  <p>Copyright © Göteborgs Lack & Skadeverkstad 2025</p>
-</div>
+      <p>Copyright © Göteborgs Lack & Skadeverkstad 2025</p>
     </div>
   </footer>
 
-  <script src="skadebesiktning.js"></script>
+  <!-- Sätt min-datum = idag (valfritt, men trevligt) -->
+  <script defer>
+    const d = document.getElementById('bookingDate');
+    if (d) d.min = new Date().toISOString().slice(0,10);
+  </script>
+
+  <!-- Din logik som anropar Azure-API:t (se till att filen innehåller rätt URL & endpoint) -->
+  <script src="skadebesiktning.js?v=2" defer></script>
 </body>
 </html>
