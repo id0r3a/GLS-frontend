@@ -491,3 +491,42 @@ nav a:hover {
   display: block;
 }
 
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero h2 {
+    font-size: 1.5rem;
+  }
+
+  .social-link {
+    justify-content: center;
+  }
+
+  /* ===== Nytt för header och meny ===== */
+  header {
+    flex-direction: column;  /* logga och nav staplas */
+    align-items: center;
+    height: auto;           /* ta bort fast höjd */
+    padding: 1rem;
+  }
+
+  .site-logo {
+    height: 80px;           /* mindre logga på mobil */
+  }
+
+  nav {
+    position: static;       /* ta bort absolute */
+    transform: none;
+    margin-top: 1rem;
+  }
+
+  nav ul {
+    flex-direction: column; /* menyposter vertikalt */
+    gap: 0.5rem;
+    align-items: center;
+  }
+}
