@@ -15,14 +15,17 @@ const responseBox = document.getElementById("damageResponse");
   dateInput.setAttribute("min", todayStr);
 })();
 
-// ===== Generera tider =====
-function generateTimes(start = 9, end = 17) {
+// ===== Generera tider med sista bokning 45 min innan stängning =====
+function generateTimes(startHour, endHour) {
+  const mins = [0, 15, 30, 45];
   const times = [];
-  for (let h = start; h <= end; h++) {
-    ["00", "15", "30", "45"].forEach(m => {
-      times.push(`${h.toString().padStart(2, '0')}:${m}:00`);
-    });
+  for (let h = startHour; h < endHour; h++) {
+    for (const m of mins) {
+      times.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:00`);
+    }
   }
+  // sista kvarten innan stängning
+  times.push(`${String(endHour - 1).padStart(2, "0")}:45:00`);
   return times;
 }
 
@@ -30,12 +33,20 @@ function generateTimes(start = 9, end = 17) {
 function updateTimes() {
   const now = new Date();
   const selectedDate = new Date(dateInput.value);
+  if (isNaN(selectedDate)) return;
+
   const isToday =
     selectedDate.getFullYear() === now.getFullYear() &&
     selectedDate.getMonth() === now.getMonth() &&
     selectedDate.getDate() === now.getDate();
 
-  const times = generateTimes();
+  const day = selectedDate.getDay();
+  const isWeekend = (day === 0 || day === 6);
+
+  const startHour = isWeekend ? 10 : 9;
+  const endHour = isWeekend ? 16 : 18;
+
+  const times = generateTimes(startHour, endHour);
   timeSelect.innerHTML = '<option value="">Välj tid</option>';
 
   times.forEach(t => {

@@ -204,7 +204,7 @@
           options.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
         }
       }
-      options.push(`${String(endHour).padStart(2, "0")}:00`);
+      options.push(`${String(endHour - 1).padStart(2, "0")}:45`);
       return options;
     }
 
