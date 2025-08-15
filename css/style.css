@@ -21,7 +21,7 @@ header {
 }
 
 .site-logo {
-  height: 280px;
+  height: 140px;
   object-fit: contain;
   margin: 0;
   filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.4));
@@ -111,8 +111,6 @@ nav a:hover {
   transform: scale(1.05);
 }
 
-
-
 /* ===== Container ===== */
 .container {
   padding: 2rem 1rem;
@@ -193,8 +191,6 @@ nav a:hover {
   font-weight: bold;
   color: #60a5fa;
 }
-
-
 
 /* ===== Footer ===== */
 .custom-footer {
