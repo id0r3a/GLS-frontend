@@ -5,7 +5,7 @@ const timeSelect = document.getElementById("damageTime");
 const dateInput = form.querySelector('input[name="bookingDate"]');
 const responseBox = document.getElementById("damageResponse");
 
-// ===== Sätt min-datum till idag =====
+// ===== Min-datum idag & (valfritt) sätt default till idag =====
 (function setMinDate() {
   const now = new Date();
   const yyyy = now.getFullYear();
@@ -13,52 +13,85 @@ const responseBox = document.getElementById("damageResponse");
   const dd = String(now.getDate()).padStart(2, "0");
   const todayStr = `${yyyy}-${mm}-${dd}`;
   dateInput.setAttribute("min", todayStr);
+  if (!dateInput.value) dateInput.value = todayStr; // sätt dagens datum om tomt
 })();
 
-// ===== Generera tider med sista bokning 45 min innan stängning =====
+// ===== Generera tider: kvartsteg, sista 15 min innan stängning =====
+// Returnerar "HH:mm"
 function generateTimes(startHour, endHour) {
   const mins = [0, 15, 30, 45];
-  const times = [];
-  for (let h = startHour; h < endHour; h++) {
+  const out = [];
+  const lastMinute = endHour * 60;   // t.ex. 18:00 -> 1080
+  const lastSlot   = lastMinute - 15; // t.ex. 17:45 -> 1065
+
+  for (let h = startHour; h <= endHour; h++) {
     for (const m of mins) {
-      times.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:00`);
+      const total = h * 60 + m;
+      if (total > lastSlot) continue; // hoppa över senare än sista kvart
+      out.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
     }
   }
-  // sista kvarten innan stängning
-  times.push(`${String(endHour - 1).padStart(2, "0")}:45:00`);
-  return times;
+  return out;
 }
 
-// ===== Uppdatera tider baserat på valt datum =====
-function updateTimes() {
-  const now = new Date();
-  const selectedDate = new Date(dateInput.value);
+// ===== Uppdatera tider för valt datum (filtrera bort bokade + passerade idag) =====
+async function updateTimes() {
+  const val = dateInput.value;
+  if (!val) return;
+
+  const selectedDate = new Date(val + "T00:00:00");
   if (isNaN(selectedDate)) return;
 
+  const day = selectedDate.getDay();
+  const isWeekend = (day === 0 || day === 6);
+  const startHour = isWeekend ? 10 : 9;
+  const endHour   = isWeekend ? 16 : 18;
+
+  const now = new Date();
   const isToday =
     selectedDate.getFullYear() === now.getFullYear() &&
     selectedDate.getMonth() === now.getMonth() &&
     selectedDate.getDate() === now.getDate();
 
-  const day = selectedDate.getDay();
-  const isWeekend = (day === 0 || day === 6);
+  // Runda upp nu till nästa kvart
+  const nowRoundedToNextQuarter = (() => {
+    const mins = now.getHours() * 60 + now.getMinutes();
+    return Math.ceil(mins / 15) * 15;
+  })();
 
-  const startHour = isWeekend ? 10 : 9;
-  const endHour = isWeekend ? 16 : 18;
+  // 1) skapa alla möjliga tider ("HH:mm")
+  const allTimes = generateTimes(startHour, endHour);
 
-  const times = generateTimes(startHour, endHour);
+  // 2) hämta bokade tider från API
+  //    (Booking/booked-times tar hänsyn till både vanliga bokningar och skadebesiktningar)
+  let booked = [];
+  try {
+    const res = await fetch(`${backendUrl}/booking/booked-times?date=${val}`);
+    if (res.ok) {
+      booked = await res.json(); // kan vara "HH:mm:ss" eller "HH:mm" beroende på din backend
+    }
+  } catch (e) {
+    console.warn("Kunde inte hämta bokade tider:", e);
+  }
+  // Normalisera till "HH:mm" för jämförelse
+  const bookedHHmm = booked.map(s => String(s).slice(0, 5));
+
+  // 3) rendera listan
   timeSelect.innerHTML = '<option value="">Välj tid</option>';
 
-  times.forEach(t => {
-    if (isToday) {
-      const [h, m] = t.split(":").map(Number);
-      const minutesTotal = h * 60 + m;
-      const nowMinutesTotal = now.getHours() * 60 + now.getMinutes();
-      if (minutesTotal <= nowMinutesTotal) return; // hoppa över gamla tider
-    }
+  allTimes.forEach(t => {
+    const [h, m] = t.split(":").map(Number);
+    const total = h * 60 + m;
+
+    // hoppa över passerade tider idag
+    if (isToday && total < nowRoundedToNextQuarter) return;
+
+    // hoppa över om tiden redan är bokad
+    if (bookedHHmm.includes(t)) return;
+
     const opt = document.createElement("option");
-    opt.value = t;
-    opt.textContent = t.slice(0, 5);
+    opt.value = `${t}:00`; // backend vill ha HH:mm:ss
+    opt.textContent = t;   // visa HH:mm i UI
     timeSelect.appendChild(opt);
   });
 }
@@ -71,9 +104,9 @@ dateInput.addEventListener("change", updateTimes);
 form?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  let timeValue = form.bookingTime.value;
-  if (timeValue.length === 5) {
-    timeValue += ":00"; // gör till hh:mm:ss
+  let timeValue = form.bookingTime.value; // bör redan vara "HH:mm:ss"
+  if (timeValue && timeValue.length === 5) {
+    timeValue += ":00";
   }
 
   const data = {
@@ -85,21 +118,28 @@ form?.addEventListener("submit", async (e) => {
     bookingTime: timeValue
   };
 
-  const res = await fetch(`${backendUrl}/damageinspection`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+  try {
+    const res = await fetch(`${backendUrl}/damageinspection`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
 
-  const result = await res.json().catch(() => ({}));
+    const result = await res.json().catch(() => ({}));
 
-  if (res.ok) {
-    responseBox.textContent = result.message || "Skadebesiktning bokad!";
-    responseBox.className = "success";
-    form.reset();
-    updateTimes(); // återställ tider
-  } else {
-    responseBox.textContent = result.message || "Något gick fel.";
+    if (res.ok) {
+      responseBox.textContent = result.message || "Skadebesiktning bokad!";
+      responseBox.className = "success";
+      form.reset();
+      // fyll tider igen (för valt datum – fältet har kvar dagens datum)
+      updateTimes();
+    } else {
+      responseBox.textContent = result.message || "Något gick fel.";
+      responseBox.className = "error";
+    }
+  } catch (err) {
+    responseBox.textContent = "Kunde inte kontakta servern.";
     responseBox.className = "error";
+    console.error(err);
   }
 });
