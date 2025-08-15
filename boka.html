@@ -196,87 +196,134 @@
     });
 
     // Tider (kvartssteg + exakt sluttid)
-    function generateTimeOptions(startHour, endHour) {
-      const mins = [0, 15, 30, 45];
-      const options = [];
-      for (let h = startHour; h < endHour; h++) {
-        for (const m of mins) {
-          options.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
-        }
-      }
-      options.push(`${String(endHour - 1).padStart(2, "0")}:45`);
-      return options;
+   // === Tider (kvartssteg; sista bokbara 17:45 vardag / 15:45 helg) ===
+function generateTimeOptions(startHour, endHour) {
+  const mins = [0, 15, 30, 45];
+  const options = [];
+
+  // sista tillåtna slot är 15 min före stängning
+  const lastMinute = endHour * 60;       // t.ex. 18:00 -> 1080
+  const lastSlot   = lastMinute - 15;    // t.ex. 17:45 -> 1065
+
+  for (let h = startHour; h <= endHour; h++) {
+    for (const m of mins) {
+      const total = h * 60 + m;
+      if (total > lastSlot) continue; // hoppa över efter sista kvart
+      options.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
     }
+  }
+  return options; // "HH:mm"
+}
 
-    // Uppdatera tider
-    function updateTimeSelect() {
-      const val = bookingDateInput.value;
-      if (!val) return;
+// === Uppdatera tider (filtrerar bort bokade och passerade idag) ===
+async function updateTimeSelect() {
+  const val = bookingDateInput.value;
+  if (!val) return;
 
-      const selectedDate = new Date(val + "T00:00:00");
-      if (isNaN(selectedDate)) return;
+  const selectedDate = new Date(val + "T00:00:00");
+  if (isNaN(selectedDate)) return;
 
-      const day = selectedDate.getDay();
-      const isWeekend = (day === 0 || day === 6);
-      const startHour = isWeekend ? 10 : 9;
-      const endHour = isWeekend ? 16 : 18;
+  const day = selectedDate.getDay();
+  const isWeekend = (day === 0 || day === 6);
+  const startHour = isWeekend ? 10 : 9;
+  const endHour   = isWeekend ? 16 : 18;
 
-      const now = new Date();
-      const isToday =
-        selectedDate.getFullYear() === now.getFullYear() &&
-        selectedDate.getMonth() === now.getMonth() &&
-        selectedDate.getDate() === now.getDate();
+  const now = new Date();
+  const isToday =
+    selectedDate.getFullYear() === now.getFullYear() &&
+    selectedDate.getMonth() === now.getMonth() &&
+    selectedDate.getDate() === now.getDate();
 
-      const nowRoundedToNextQuarter = (() => {
-        const mins = now.getHours() * 60 + now.getMinutes();
-        return Math.ceil(mins / 15) * 15;
-      })();
+  // runda upp nu till nästa kvart
+  const nowRoundedToNextQuarter = (() => {
+    const mins = now.getHours() * 60 + now.getMinutes();
+    return Math.ceil(mins / 15) * 15;
+  })();
 
-      const times = generateTimeOptions(startHour, endHour);
-      bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
+  // 1) generera alla möjliga tider
+  const times = generateTimeOptions(startHour, endHour); // "HH:mm"
 
-      times.forEach(t => {
-        const [hh, mm] = t.split(":").map(Number);
-        const total = hh * 60 + mm;
-        if (isToday && total < nowRoundedToNextQuarter) return;
-        const opt = document.createElement("option");
-        opt.value = `${t}:00`;
-        opt.textContent = t;
-        bookingTimeSelect.appendChild(opt);
-      });
-    }
-    bookingDateInput?.addEventListener("change", updateTimeSelect);
+  // 2) hämta bokade tider från API (returnerar "HH:mm:ss")
+  let booked = [];
+  try {
+    const res = await fetch(`${backendUrl}/booking/booked-times?date=${val}`);
+    if (res.ok) booked = await res.json(); // t.ex. ["09:00:00","10:15:00"]
+  } catch (e) {
+    console.warn("Kunde inte hämta bokade tider:", e);
+  }
 
-    // Skicka formulär
-    form?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const json = Object.fromEntries(formData);
-      json.serviceType = (json.serviceType || "").split(",").map(s => s.trim()).filter(Boolean);
+  // 3) rendera dropdown
+  bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
 
-      try {
-        const res = await fetch(`${backendUrl}/Booking`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(json)
-        });
-        const result = await res.json();
-        if (res.ok) {
-          responseBox.textContent = result.message || "Din bokning har skickats!";
-          responseBox.className = "success";
-          form.reset();
-          selectedServices = [];
-          renderTags();
-          bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
-        } else {
-          responseBox.textContent = result.message || "Ett fel inträffade.";
-          responseBox.className = "error";
-        }
-      } catch (err) {
-        responseBox.textContent = "Kunde inte kontakta servern.";
-        responseBox.className = "error";
-      }
+  times.forEach(t => {
+    const [hh, mm] = t.split(":").map(Number);
+    const total = hh * 60 + mm;
+
+    // hoppa över passerade tider idag
+    if (isToday && total < nowRoundedToNextQuarter) return;
+
+    const valueWithSeconds = `${t}:00`; // backend vill ha "HH:mm:ss"
+
+    // hoppa över om tiden redan är bokad
+    if (booked.includes(valueWithSeconds)) return;
+
+    const opt = document.createElement("option");
+    opt.value = valueWithSeconds; // "HH:mm:ss" till backend
+    opt.textContent = t;          // "HH:mm" i UI
+    bookingTimeSelect.appendChild(opt);
+  });
+}
+
+// kör när datum ändras
+bookingDateInput?.addEventListener("change", updateTimeSelect);
+
+// valfritt: sätt default till idag och fyll tider direkt
+if (bookingDateInput && !bookingDateInput.value) {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  bookingDateInput.value = `${yyyy}-${mm}-${dd}`;
+}
+if (bookingDateInput?.value) {
+  updateTimeSelect();
+}
+
+// === Skicka formulär ===
+form?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const formData = new FormData(form);
+  const json = Object.fromEntries(formData);
+  json.serviceType = (json.serviceType || "")
+    .split(",")
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  try {
+    const res = await fetch(`${backendUrl}/Booking`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(json)
     });
+    const result = await res.json();
+    if (res.ok) {
+      responseBox.textContent = result.message || "Din bokning har skickats!";
+      responseBox.className = "success";
+      form.reset();
+      selectedServices = [];
+      renderTags();
+      bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
+    } else {
+      responseBox.textContent = result.message || "Ett fel inträffade.";
+      responseBox.className = "error";
+    }
+  } catch (err) {
+    responseBox.textContent = "Kunde inte kontakta servern.";
+    responseBox.className = "error";
+    console.error(err);
+  }
+});
+
   </script>
 </body>
 </html>
