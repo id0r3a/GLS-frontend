@@ -107,164 +107,185 @@
 
   <!-- ===== JS ===== -->
   <script>
-    const backendUrl = "https://carworkshop-api.azurewebsites.net/api";
+  const backendUrl = "https://carworkshop-api.azurewebsites.net/api";
 
-    const form = document.getElementById("bookingForm");
-    const dropdownToggle = document.getElementById("dropdownToggle");
-    const dropdownWrapper = dropdownToggle?.closest(".dropdown-wrapper");
-    const dropdownMenu = document.getElementById("dropdownMenu");
-    const selectedContainer = document.getElementById("selectedServicesContainer");
-    const hiddenInput = document.getElementById("selectedServices");
-    const bookingDateInput = document.querySelector('input[name="bookingDate"]');
-    const bookingTimeSelect = document.getElementById("bookingTime");
-    const responseBox = document.getElementById("bookingResponse");
+  const form = document.getElementById("bookingForm");
+  const dropdownToggle = document.getElementById("dropdownToggle");
+  const dropdownWrapper = dropdownToggle?.closest(".dropdown-wrapper");
+  const dropdownMenu = document.getElementById("dropdownMenu");
+  const selectedContainer = document.getElementById("selectedServicesContainer");
+  const hiddenInput = document.getElementById("selectedServices");
+  const bookingDateInput = document.querySelector('input[name="bookingDate"]');
+  const bookingTimeSelect = document.getElementById("bookingTime");
+  const responseBox = document.getElementById("bookingResponse");
 
-    let selectedServices = [];
-    const allServices = [
-      "Lack/Plåtskador",
-      "Polering",
-      "Foliering",
-      "Paintless Dent Repair",
-      "Mekaniska reparationer",
-      "Laga/byta vindruta",
-      "Glasfiber"
-    ];
+  let selectedServices = [];
+  const allServices = [
+    "Lack/Plåtskador",
+    "Polering",
+    "Foliering",
+    "Paintless Dent Repair",
+    "Mekaniska reparationer",
+    "Laga/byta vindruta",
+    "Glasfiber"
+  ];
 
-    // Fyll dropdown
-    function populateDropdown() {
-      dropdownMenu.innerHTML = "";
-      allServices.forEach(service => {
-        if (!selectedServices.includes(service)) {
-          const li = document.createElement("li");
-          li.setAttribute("data-value", service);
-          li.textContent = service;
-          dropdownMenu.appendChild(li);
-        }
-      });
-    }
+  // === Sätt min-datum till idag ===
+  (function setMinDate() {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const dd = String(now.getDate()).padStart(2, "0");
+    bookingDateInput.setAttribute("min", `${yyyy}-${mm}-${dd}`);
+  })();
 
-    populateDropdown();
-
-    // Dropdown toggle
-    dropdownToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdownWrapper?.classList.toggle("open");
-    });
-
-    dropdownMenu?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (e.target.tagName === "LI") {
-        const value = e.target.getAttribute("data-value");
-        if (!selectedServices.includes(value)) {
-          selectedServices.push(value);
-          renderTags();
-          populateDropdown();
-        }
-        dropdownWrapper.classList.remove("open");
+  // === Fyll dropdown med tjänster ===
+  function populateDropdown() {
+    dropdownMenu.innerHTML = "";
+    allServices.forEach(service => {
+      if (!selectedServices.includes(service)) {
+        const li = document.createElement("li");
+        li.setAttribute("data-value", service);
+        li.textContent = service;
+        dropdownMenu.appendChild(li);
       }
     });
+  }
 
-    document.addEventListener("click", () => {
-      dropdownWrapper?.classList.remove("open");
-    });
+  populateDropdown();
 
-    function renderTags() {
-      selectedContainer.innerHTML = "";
-      selectedServices.forEach(service => {
-        const tag = document.createElement("div");
-        tag.className = "tag";
-        tag.innerHTML = `
-          ${service}
-          <button class="remove-tag" data-service="${service}">&times;</button>
-        `;
-        selectedContainer.appendChild(tag);
-      });
-      hiddenInput.value = selectedServices.join(",");
-    }
+  // Dropdown toggle
+  dropdownToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdownWrapper?.classList.toggle("open");
+  });
 
-    selectedContainer.addEventListener("click", (e) => {
-      if (e.target.classList.contains("remove-tag")) {
-        const serviceToRemove = e.target.dataset.service;
-        selectedServices = selectedServices.filter(s => s !== serviceToRemove);
+  dropdownMenu?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (e.target.tagName === "LI") {
+      const value = e.target.getAttribute("data-value");
+      if (!selectedServices.includes(value)) {
+        selectedServices.push(value);
         renderTags();
         populateDropdown();
       }
+      dropdownWrapper.classList.remove("open");
+    }
+  });
+
+  document.addEventListener("click", () => {
+    dropdownWrapper?.classList.remove("open");
+  });
+
+  function renderTags() {
+    selectedContainer.innerHTML = "";
+    selectedServices.forEach(service => {
+      const tag = document.createElement("div");
+      tag.className = "tag";
+      tag.innerHTML = `
+        ${service}
+        <button class="remove-tag" data-service="${service}">&times;</button>
+      `;
+      selectedContainer.appendChild(tag);
     });
+    hiddenInput.value = selectedServices.join(",");
+  }
 
-    // Tidsval baserat på öppettider
-    function generateTimeOptions(startHour, endHour) {
-      const allowedMinutes = [0, 15, 30, 45];
-      const options = [];
+  selectedContainer.addEventListener("click", (e) => {
+    if (e.target.classList.contains("remove-tag")) {
+      const serviceToRemove = e.target.dataset.service;
+      selectedServices = selectedServices.filter(s => s !== serviceToRemove);
+      renderTags();
+      populateDropdown();
+    }
+  });
 
-      for (let h = startHour; h <= endHour; h++) {
-        for (let m of allowedMinutes) {
-          const hour = h.toString().padStart(2, "0");
-          const min = m.toString().padStart(2, "0");
-          options.push(`${hour}:${min}`);
-        }
+  // === Generera tider (kvartsteg) ===
+  function generateTimeOptions(startHour, endHour) {
+    const allowedMinutes = [0, 15, 30, 45];
+    const options = [];
+
+    for (let h = startHour; h <= endHour; h++) {
+      for (let m of allowedMinutes) {
+        const hour = h.toString().padStart(2, "0");
+        const min = m.toString().padStart(2, "0");
+        options.push(`${hour}:${min}`);
       }
-
-      return options;
     }
+    return options;
+  }
 
-    function updateTimeSelect() {
-      const selectedDate = new Date(bookingDateInput.value);
-      if (isNaN(selectedDate)) return;
+  // === Uppdatera tider och ta bort gamla idag ===
+  function updateTimeSelect() {
+    const selectedDate = new Date(bookingDateInput.value);
+    if (isNaN(selectedDate)) return;
 
-      const day = selectedDate.getDay();
-      const isWeekend = (day === 0 || day === 6);
+    const now = new Date();
+    const isToday =
+      selectedDate.getFullYear() === now.getFullYear() &&
+      selectedDate.getMonth() === now.getMonth() &&
+      selectedDate.getDate() === now.getDate();
 
-      const startHour = isWeekend ? 10 : 9;
-      const endHour = isWeekend ? 16 : 18;
+    const day = selectedDate.getDay();
+    const isWeekend = (day === 0 || day === 6);
 
-      const times = generateTimeOptions(startHour, endHour);
-      bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
-      times.forEach(t => {
-        const opt = document.createElement("option");
-        opt.value = t + ":00";
-        opt.textContent = t;
-        bookingTimeSelect.appendChild(opt);
+    const startHour = isWeekend ? 10 : 9;
+    const endHour = isWeekend ? 16 : 18;
+
+    const times = generateTimeOptions(startHour, endHour);
+    bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
+
+    times.forEach(t => {
+      const [h, m] = t.split(":").map(Number);
+      const totalMinutes = h * 60 + m;
+      if (isToday) {
+        const nowMinutes = now.getHours() * 60 + now.getMinutes();
+        if (totalMinutes <= nowMinutes) return; // hoppa över gamla tider
+      }
+      const opt = document.createElement("option");
+      opt.value = `${t}:00`;
+      opt.textContent = t;
+      bookingTimeSelect.appendChild(opt);
+    });
+  }
+
+  bookingDateInput?.addEventListener("change", updateTimeSelect);
+
+  // === Skicka formulär ===
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const json = Object.fromEntries(formData);
+
+    json.serviceType = (json.serviceType || "")
+      .split(",")
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    try {
+      const res = await fetch(`${backendUrl}/Booking`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(json)
       });
-    }
 
-    bookingDateInput?.addEventListener("change", updateTimeSelect);
-
-    // Skicka formulär
-    form?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const json = Object.fromEntries(formData);
-
-      json.serviceType = (json.serviceType || "")
-        .split(",")
-        .map(s => s.trim())
-        .filter(Boolean);
-
-      try {
-        const res = await fetch(`${backendUrl}/Booking`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(json)
-        });
-
-        const result = await res.json();
-        if (res.ok) {
-          responseBox.textContent = result.message || "Din bokning har skickats!";
-          responseBox.className = "success";
-          form.reset();
-          selectedServices = [];
-          renderTags();
-          bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
-        } else {
-          responseBox.textContent = result.message || "Ett fel inträffade.";
-          responseBox.className = "error";
-        }
-      } catch (err) {
-        responseBox.textContent = "Kunde inte kontakta servern.";
+      const result = await res.json();
+      if (res.ok) {
+        responseBox.textContent = result.message || "Din bokning har skickats!";
+        responseBox.className = "success";
+        form.reset();
+        selectedServices = [];
+        renderTags();
+        bookingTimeSelect.innerHTML = `<option value="">Välj tid</option>`;
+      } else {
+        responseBox.textContent = result.message || "Ett fel inträffade.";
         responseBox.className = "error";
       }
-    });
-  </script>
-
+    } catch (err) {
+      responseBox.textContent = "Kunde inte kontakta servern.";
+      responseBox.className = "error";
+    }
+  });
+</script>
 </body>
 </html>
