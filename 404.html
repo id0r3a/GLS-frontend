@@ -2,27 +2,150 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sidan hittas inte – Göteborgs Lack & Skadeverkstad AB</title>
-  <meta name="description" content="Sidan du letade efter finns inte. Navigera tillbaka till startsidan eller kontakta oss.">
-  <link rel="stylesheet" href="css/style.css" />
+  <meta name="description" content="Sidan du letade efter finns inte. Gå till startsidan, boka tid eller kontakta oss." />
+
+  <!-- Favicons (samma som övriga sidor) -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0f1a28">
+
+  <!-- Din globala CSS + ikoner -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Minimal, egen CSS bara för 404-layouten -->
+  <style>
+    :root{
+      --bg:#0f1a28;          /* header/fot – mörk blå nästan svart */
+      --panel:#ffffff;       /* kortbakgrund */
+      --text:#0f1a28;        /* mörk text */
+      --muted:#5f6b7a;       /* sekundär text */
+      --brand:#2b6cb0;       /* knapp/blå */
+      --brand-hover:#225e9a; /* knapp/blå hover */
+      --radius:18px;
+      --shadow:0 10px 30px rgba(0,0,0,.12);
+    }
+
+    body{
+      background: #f3f6fb;
+      color: var(--text);
+      margin: 0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+
+    /* Headerband med din logga */
+    .header-bar{
+      background: var(--bg);
+      padding: 26px 16px;
+    }
+    .header-inner{
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .header-logo{
+      height: 54px;
+      width: auto;
+    }
+
+    /* Huvudsektion – centrerad “card” */
+    .wrap{
+      max-width: 980px;
+      margin: 48px auto;
+      padding: 0 16px;
+    }
+    .card{
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(28px, 4vw, 48px);
+    }
+    .card h1{
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4.5vw, 42px);
+      letter-spacing: .2px;
+    }
+    .card p.lead{
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: clamp(16px, 2.1vw, 18px);
+      line-height: 1.6;
+    }
+
+    /* Knapp-rad */
+    .btn-row{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: .2s ease;
+      box-shadow: 0 6px 16px rgba(43,108,176,.18);
+    }
+    .btn-primary{
+      background: var(--brand);
+      color: #fff;
+    }
+    .btn-primary:hover{ background: var(--brand-hover); }
+    .btn-ghost{
+      background: #e8eef7;
+      color: var(--text);
+      box-shadow: none;
+    }
+    .btn-ghost:hover{ background:#dbe6f5; }
+
+    /* Footerband */
+    .footer-bar{
+      margin-top: 48px;
+      background: linear-gradient(180deg, #152133 0%, #0f1a28 100%);
+      color: #cbd5e1;
+      padding: 22px 16px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
 
-  <header>
-    <a href="index.html">
-      <img src="css/images/logo.png" alt="GLS Verkstad logotyp" class="site-logo" />
-    </a>
-  </header>
+  <!-- Header -->
+  <div class="header-bar">
+    <div class="header-inner">
+      <a href="/"><img src="/css/images/logo.png" alt="Göteborgs Lack & Skadeverkstad AB" class="header-logo"></a>
+    </div>
+  </div>
 
-  <main class="error-page">
-    <h1>Oj då! 🚗💨</h1>
-    <p>Sidan du försökte nå finns inte längre eller har flyttats.</p>
-    <a href="index.html" class="hero-btn">Till startsidan</a>
+  <!-- Innehåll -->
+  <main class="wrap">
+    <section class="card" aria-labelledby="notfound-title">
+      <h1 id="notfound-title">Sidan hittas inte</h1>
+      <p class="lead">
+        Länken kan vara felstavad eller så har sidan flyttats. Använd knapparna nedan för att komma vidare.
+      </p>
+
+      <div class="btn-row">
+        <a class="btn btn-primary" href="/"><i class="fa-solid fa-house"></i> Till startsidan</a>
+        <a class="btn btn-ghost" href="/boka.html"><i class="fa-solid fa-calendar-check"></i> Boka tid</a>
+        <a class="btn btn-ghost" href="/kontakt.html"><i class="fa-solid fa-envelope"></i> Kontakta oss</a>
+      </div>
+    </section>
   </main>
 
-  <footer class="custom-footer">
-    <p>Copyright © Göteborgs Lack & Skadeverkstad 2025</p>
+  <!-- Footer -->
+  <footer class="footer-bar">
+    Copyright © Göteborgs Lack &amp; Skadeverkstad 2025
   </footer>
 
 </body>
