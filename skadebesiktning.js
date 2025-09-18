@@ -1,4 +1,4 @@
-const backendUrl = "carworkshop-apii-gefhdxhugbhvb6cs.westeurope-01.azurewebsites.net";
+const backendUrl = "carworkshop-apii-gefhdxhugbhvb6cs.westeurope-01.azurewebsites.net/api";
 
 const form = document.getElementById("damageInspectionForm");
 const timeSelect = document.getElementById("damageTime");
