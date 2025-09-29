@@ -69,32 +69,36 @@ nav a:hover {
   padding: 0;
 }
 /* ===== Announcement Bar ===== */
-.announcement-bar{
-  display:flex; align-items:center; gap:.75rem;
-  justify-content:center; text-align:center;
-  padding:.9rem 1.2rem;
-  background:#0b1e3f; /* marinblå */
-  color:#fff;
-  position:relative; z-index:10;
-  box-shadow:0 4px 14px rgba(0,0,0,.12);
-}
-.announcement-bar i{ font-size:1.1rem; }
-.announcement-bar .announce-cta{
-  margin-left:1rem; padding:.5rem .9rem; border-radius:999px;
-  background:#ffffff; color:#0b1e3f; font-weight:600; text-decoration:none;
-  transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
-  white-space:nowrap;
-}
-.announcement-bar .announce-cta:hover{
-  transform:translateY(-1px);
-  box-shadow:0 6px 18px rgba(0,0,0,.18);
+.announcement-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  text-align: center;
+  padding: .9rem 1.2rem;
+  background: #0b1e3f; /* marinblå */
+  color: #fff;
+  position: relative;
+  z-index: 20; /* över annat innehåll */
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  font-weight: 500;
 }
 
-/* (valfritt) gör baren sticky under headern */
-.sticky-announcement { position: sticky; top: 0; }
-@media (max-width:600px){
-  .announcement-bar{ padding:.8rem .9rem; }
-  .announcement-bar .announce-cta{ margin-left:.5rem; padding:.45rem .8rem; }
+.announcement-bar i {
+  font-size: 1.1rem;
+}
+
+/* Gör baren sticky under headern */
+.sticky-announcement {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+@media (max-width: 600px) {
+  .announcement-bar {
+    padding: .8rem .9rem;
+  }
 }
 
 /* ===== Hero ===== */
