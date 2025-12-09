@@ -519,6 +519,185 @@ nav a:hover {
   display: block;
 }
 
+/* ===== Kundrecensioner ===== */
+.reviews-section {
+  padding: 4rem 1rem;
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  text-align: center;
+}
+
+.reviews-section h2 {
+  color: #ffffff;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.reviews-badge {
+  margin-bottom: 2.5rem;
+}
+
+.reviews-badge a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #60a5fa;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #60a5fa;
+  border-radius: 999px;
+  transition: all 0.3s ease;
+}
+
+.reviews-badge a:hover {
+  background-color: #60a5fa;
+  color: #111827;
+}
+
+.reviews-badge a i {
+  color: #fbbf24;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.review-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: left;
+  transition: transform 0.3s ease, background 0.3s ease;
+  
+  /* Staggered animation */
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.review-card:nth-child(1) { animation-delay: 0.1s; }
+.review-card:nth-child(2) { animation-delay: 0.2s; }
+.review-card:nth-child(3) { animation-delay: 0.3s; }
+.review-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Dolda recensioner (visas vid klick) */
+.review-hidden {
+  display: none;
+}
+
+.review-visible {
+  display: block;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Visa fler-knapp */
+.show-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 0.8rem 1.5rem;
+  background: transparent;
+  color: #60a5fa;
+  border: 2px solid #60a5fa;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.show-more-btn:hover {
+  background: #60a5fa;
+  color: #111827;
+}
+
+.show-more-btn i {
+  transition: transform 0.3s ease;
+}
+
+.show-more-btn:hover i {
+  transform: translateY(3px);
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.review-header {
+  margin-bottom: 1rem;
+}
+
+.review-stars {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.review-stars i {
+  color: #fbbf24;
+  font-size: 1rem;
+}
+
+.review-text {
+  color: #e5e7eb;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.review-author {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.author-name {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.review-date {
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .reviews-section {
+    padding: 3rem 1rem;
+  }
+  
+  .reviews-section h2 {
+    font-size: 1.5rem;
+  }
+  
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .footer-content {
     flex-direction: column;

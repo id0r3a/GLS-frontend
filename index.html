@@ -157,6 +157,22 @@
     </div>
 
     </section>
+
+    <!-- ===== Kundrecensioner ===== -->
+    <section class="reviews-section" aria-labelledby="reviews-heading">
+      <h2 id="reviews-heading">Vad våra kunder säger</h2>
+      <div class="reviews-badge">
+        <a href="https://www.reco.se/goteborgs-lack-skadeverkstad-ab" target="_blank" rel="noopener">
+          <i class="fas fa-star"></i> Se alla recensioner på Reco.se
+        </a>
+      </div>
+      <div class="reviews-grid" id="reviewsGrid">
+        <!-- Recensioner laddas automatiskt från reviews.json -->
+      </div>
+      <button class="show-more-btn" id="showMoreReviews" style="display: none;">
+        <i class="fas fa-chevron-down"></i> Visa fler recensioner
+      </button>
+    </section>
   </main>
 
   <!-- ===== Footer ===== -->
@@ -184,6 +200,73 @@
     </div>
     </div>
   </footer>
+
+  <script>
+    // Ladda recensioner från JSON-fil
+    async function loadReviews() {
+      try {
+        const response = await fetch('reviews.json');
+        const data = await response.json();
+        const grid = document.getElementById('reviewsGrid');
+        const showMoreBtn = document.getElementById('showMoreReviews');
+        
+        // Skapa stjärnor baserat på betyg
+        function createStars(rating) {
+          let stars = '';
+          for (let i = 0; i < rating; i++) {
+            stars += '<i class="fas fa-star"></i>';
+          }
+          return stars;
+        }
+        
+        // Skapa recensionskort
+        data.reviews.forEach((review, index) => {
+          const card = document.createElement('article');
+          const isHidden = !review.featured;
+          card.className = `review-card${isHidden ? ' review-hidden' : ''}`;
+          card.style.animationDelay = `${(index % 4) * 0.1 + 0.1}s`;
+          
+          card.innerHTML = `
+            <div class="review-header">
+              <div class="review-stars">
+                ${createStars(review.rating)}
+              </div>
+            </div>
+            <p class="review-text">"${review.text}"</p>
+            <div class="review-author">
+              <span class="author-name">${review.name}</span>
+              <span class="review-date">${review.date}</span>
+            </div>
+          `;
+          
+          grid.appendChild(card);
+        });
+        
+        // Visa "Visa fler"-knappen om det finns dolda recensioner
+        const hiddenCards = document.querySelectorAll('.review-hidden');
+        if (hiddenCards.length > 0) {
+          showMoreBtn.style.display = 'inline-flex';
+        }
+        
+      } catch (error) {
+        console.error('Kunde inte ladda recensioner:', error);
+      }
+    }
+    
+    // Visa fler recensioner vid klick
+    document.getElementById('showMoreReviews').addEventListener('click', function() {
+      const hiddenCards = document.querySelectorAll('.review-hidden');
+      hiddenCards.forEach((card, index) => {
+        card.style.animationDelay = (index * 0.15) + 's';
+        card.classList.remove('review-hidden');
+        card.classList.add('review-visible');
+      });
+      this.style.display = 'none';
+    });
+    
+    // Ladda recensioner när sidan laddas
+    loadReviews();
+  </script>
 
 </body>
 </html>
