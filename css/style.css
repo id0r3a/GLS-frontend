@@ -4,7 +4,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f3f4f6;
   color: #1f2937;
-  line-height: 1.;
+  line-height: 1.6;
 }
 
 /* ===== Header ===== */
@@ -17,7 +17,7 @@ header {
   padding: 1.5rem 1.5rem;
   position: relative;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  height: 180px; /* styr höjden så att logga och nav hamnar jämnt */
+  height: 180px;
 }
 
 .site-logo {
@@ -105,7 +105,7 @@ nav a:hover {
 .hero {
   position: relative;
   text-align: center;
-  padding: 4rem 1rem;
+  padding: 6rem 1rem;
   background: url('images/mlk.jpg') center/cover no-repeat;
   color: white;
   z-index: 1;
@@ -120,15 +120,21 @@ nav a:hover {
   z-index: -1;
 }
 
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
 .hero h2 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
 }
+
 .hero-btn {
   display: inline-block;
   margin-top: 1.5rem;
   padding: 0.9rem 2rem;
-  background-color: #3b82f6; /* blå */
+  background-color: #3b82f6;
   color: white;
   font-weight: 600;
   border: none;
@@ -139,8 +145,63 @@ nav a:hover {
 }
 
 .hero-btn:hover {
-  background-color: #2563eb; /* mörkare blå vid hover */
+  background-color: #2563eb;
   transform: scale(1.05);
+}
+
+/* ===== Varför välja oss ===== */
+.why-us-section {
+  background: #111827;
+  padding: 1.5rem 1rem;
+}
+
+.why-us-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.why-us-item {
+  text-align: center;
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.why-us-item:hover {
+  transform: translateY(-5px);
+}
+
+.why-us-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.why-us-icon i {
+  font-size: 1.8rem;
+  color: white;
+}
+
+.why-us-item h3 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.why-us-item p {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  margin: 0;
+  font-weight: 300;
 }
 
 /* ===== Container ===== */
@@ -226,10 +287,11 @@ nav a:hover {
 
 /* ===== Footer ===== */
 .custom-footer {
-  background: linear-gradient(rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.95)), url('images/footer-bg.jpg') center/cover no-repeat;
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
   color: #ffffff;
-  padding: 4rem 1rem;
+  padding: 3rem 1rem 2rem;
   font-family: 'Segoe UI', sans-serif;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-content {
@@ -242,63 +304,180 @@ nav a:hover {
 }
 
 .footer-column {
-  flex: 1 1 300px;
-  background-color: rgba(255, 255, 255, 0.08);
-  padding: 1.5rem;
-  border-radius: 10px;
-  transition: background-color 0.3s ease;
+  flex: 1 1 280px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-column::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #3b82f6, #60a5fa, #3b82f6, transparent);
+  transition: left 0.5s ease;
+}
+
+.footer-column::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
 }
 
 .footer-column:hover {
-  background-color: rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+  border-color: rgba(59, 130, 246, 0.5);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(59, 130, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.footer-column:hover::before {
+  left: 100%;
+}
+
+.footer-column:hover::after {
+  opacity: 1;
 }
 
 .footer-column h3,
 .footer-column h4 {
   margin-top: 0;
-  font-weight: 600;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 1.15rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding-bottom: 0.75rem;
+}
+
+.footer-column h3::after,
+.footer-column h4::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 2px;
 }
 
 .footer-column p {
-  margin: 0.5rem 0;
+  margin: 0.6rem 0;
+  color: #e5e7eb;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-column a {
+  color: #60a5fa;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.footer-column a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #93c5fd;
+  transition: width 0.3s ease;
+}
+
+.footer-column a:hover {
+  color: #93c5fd;
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+}
+
+.footer-column a:hover::after {
+  width: 100%;
 }
 
 /* Ikonlänkar */
 .social-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
   margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
   color: #f9fafb;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
 .social-link i {
-  font-size: 1.2rem;
-  color: #e1306c;
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.social-link:hover i {
-  transform: scale(1.2);
-  color: #ff4c94;
+  font-size: 1.3rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e1306c, #c13584);
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .social-link:hover {
-  color: #ff4c94;
-  text-decoration: underline;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(225, 48, 108, 0.3);
+  transform: translateX(5px);
+}
+
+.social-link:hover i {
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 0 15px rgba(225, 48, 108, 0.5);
 }
 
 /* Google Maps ikonen */
 .social-link.maps i {
-  color: #34a853;
+  background: linear-gradient(135deg, #34a853, #1e8e3e);
+}
+
+.social-link.maps:hover {
+  border-color: rgba(52, 168, 83, 0.3);
 }
 
 .social-link.maps:hover i {
-  color: #7fd978;
+  box-shadow: 0 0 15px rgba(52, 168, 83, 0.5);
 }
 
 /* ===== Formulär Sektion ===== */
@@ -435,6 +614,29 @@ nav a:hover {
     justify-content: center;
   }
 }
+
+/* ===== Footer kontakt-ikoner ===== */
+.footer-column p i {
+  color: #60a5fa;
+  width: 18px;
+  font-size: 0.9rem;
+}
+
+/* ===== Simple Footer / Copyright ===== */
+.simple-footer {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.simple-footer p {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
 .copyright-bar {
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   margin-top: 2rem;
@@ -715,25 +917,197 @@ nav a:hover {
 
   /* ===== Nytt för header och meny ===== */
   header {
-    flex-direction: column;  /* logga och nav staplas */
+    flex-direction: column;
     align-items: center;
-    height: auto;           /* ta bort fast höjd */
+    height: auto;
     padding: 1rem;
   }
 
   .site-logo {
-    height: 100px;           /* mindre logga på mobil */
+    height: 80px;
   }
 
   nav {
-    position: static;       /* ta bort absolute */
+    position: static;
     transform: none;
-    margin-top: 1rem;
+    margin-top: 0.75rem;
   }
 
   nav ul {
-    flex-direction: column; /* menyposter vertikalt */
-    gap: 0.5rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
     align-items: center;
+    justify-content: center;
+  }
+
+  nav a {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.5rem;
+  }
+  
+  .hero {
+    padding: 3rem 1rem;
+  }
+
+  .hero h1 {
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
+
+  .hero p {
+    font-size: 0.95rem;
+  }
+
+  .hero-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  /* Varför välja oss mobil */
+  .why-us-section {
+    padding: 1rem 0.5rem;
+  }
+
+  .why-us-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .why-us-item {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .why-us-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0.5rem;
+  }
+
+  .why-us-icon i {
+    font-size: 1.3rem;
+  }
+
+  .why-us-item h3 {
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .why-us-item p {
+    font-size: 0.75rem;
+    display: none;
+  }
+
+  /* Tjänster grid mobil */
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .service-box img {
+    height: 180px;
+  }
+
+  .service-box h3 {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+
+  /* Container mobil */
+  .container {
+    padding: 1.5rem 1rem;
+  }
+
+  .container h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Formulär mobil */
+  .form-group {
+    padding: 0.6rem;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 16px; /* Förhindrar zoom på iOS */
+  }
+
+  .submit-btn {
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+}
+
+/* ===== Extra liten mobil (under 480px) ===== */
+@media (max-width: 480px) {
+  header {
+    padding: 0.75rem;
+  }
+
+  .site-logo {
+    height: 60px;
+  }
+
+  nav ul {
+    gap: 0.4rem 0.8rem;
+  }
+
+  nav a {
+    font-size: 0.85rem;
+  }
+
+  .hero {
+    padding: 2.5rem 0.75rem;
+  }
+
+  .hero h1 {
+    font-size: 1.4rem;
+  }
+
+  .why-us-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .why-us-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .why-us-icon i {
+    font-size: 1.1rem;
+  }
+
+  .why-us-item h3 {
+    font-size: 0.75rem;
+  }
+
+  .container {
+    padding: 1rem 0.75rem;
+  }
+
+  .container h2 {
+    font-size: 1.2rem;
+  }
+
+  .service-box img {
+    height: 150px;
+  }
+
+  .reviews-section {
+    padding: 2rem 0.75rem;
+  }
+
+  .reviews-section h2 {
+    font-size: 1.3rem;
+  }
+
+  .review-card {
+    padding: 1rem;
+  }
+
+  footer {
+    padding: 2rem 1rem;
   }
 }
