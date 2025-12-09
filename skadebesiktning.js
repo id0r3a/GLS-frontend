@@ -44,8 +44,8 @@ async function updateTimes() {
 
   const day = selectedDate.getDay();
   const isWeekend = (day === 0 || day === 6);
-  const startHour = isWeekend ? 10 : 9;
-  const endHour   = isWeekend ? 16 : 18;
+  const startHour = 9;  // Samma varje dag
+  const endHour   = 20; // Öppet till 20:00 varje dag
 
   const now = new Date();
   const isToday =
