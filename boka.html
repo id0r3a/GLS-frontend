@@ -50,6 +50,9 @@
     <nav>
       <ul>
         <li><a href="index.html">Hem</a></li>
+        <li><a href="boka.html" class="active">Boka tid</a></li>
+        <li><a href="skadebesiktning.html">Skadebesiktning</a></li>
+        <li><a href="kontakt.html">Kontakta oss</a></li>
       </ul>
     </nav>
   </header>
@@ -257,8 +260,8 @@ async function updateTimeSelect() {
 
   const day = selectedDate.getDay();
   const isWeekend = (day === 0 || day === 6);
-  const startHour = 9;  // Samma varje dag
-  const endHour   = 20; // Öppet till 20:00 varje dag
+  const startHour = isWeekend ? 10 : 9;
+  const endHour   = isWeekend ? 18 : 18;
 
   const now = new Date();
   const isToday =

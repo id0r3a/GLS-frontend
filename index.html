@@ -232,6 +232,11 @@
     </div>
   </footer>
 
+  <!-- Back to Top Button -->
+  <button id="backToTop" class="back-to-top" aria-label="Tillbaka till toppen">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
   <script>
     // Ladda recensioner från JSON-fil
     async function loadReviews() {
@@ -297,6 +302,21 @@
     
     // Ladda recensioner när sidan laddas
     loadReviews();
+
+    // Back to top button
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   </script>
 
 </body>

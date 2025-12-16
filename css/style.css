@@ -51,10 +51,27 @@ nav a {
   font-weight: 500;
   font-size: 1rem;
   transition: color 0.2s ease;
+  position: relative;
 }
 
 nav a:hover {
   color: #60a5fa;
+}
+
+nav a.active {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #3b82f6;
+  border-radius: 2px;
 }
 
 .header-subtext {
@@ -105,7 +122,7 @@ nav a:hover {
 .hero {
   position: relative;
   text-align: center;
-  padding: 6rem 1rem;
+  padding: 8rem 1rem;
   background: url('images/mlk.jpg') center/cover no-repeat;
   color: white;
   z-index: 1;
@@ -152,7 +169,7 @@ nav a:hover {
 /* ===== Varför välja oss ===== */
 .why-us-section {
   background: #111827;
-  padding: 1.5rem 1rem;
+  padding: 3rem 1rem;
 }
 
 .why-us-container {
@@ -426,6 +443,13 @@ nav a:hover {
   width: 100%;
 }
 
+/* Footer kontakt-ikoner */
+.footer-column p i {
+  color: #60a5fa;
+  width: 18px;
+  font-size: 0.9rem;
+}
+
 /* Ikonlänkar */
 .social-link {
   display: flex;
@@ -478,6 +502,21 @@ nav a:hover {
 
 .social-link.maps:hover i {
   box-shadow: 0 0 15px rgba(52, 168, 83, 0.5);
+}
+
+/* Simple Footer / Copyright */
+.simple-footer {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.simple-footer p {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  margin: 0;
+  letter-spacing: 0.3px;
 }
 
 /* ===== Formulär Sektion ===== */
@@ -614,29 +653,6 @@ nav a:hover {
     justify-content: center;
   }
 }
-
-/* ===== Footer kontakt-ikoner ===== */
-.footer-column p i {
-  color: #60a5fa;
-  width: 18px;
-  font-size: 0.9rem;
-}
-
-/* ===== Simple Footer / Copyright ===== */
-.simple-footer {
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: center;
-}
-
-.simple-footer p {
-  color: #9ca3af;
-  font-size: 0.9rem;
-  margin: 0;
-  letter-spacing: 0.3px;
-}
-
 .copyright-bar {
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   margin-top: 2rem;
@@ -917,213 +933,69 @@ nav a:hover {
 
   /* ===== Nytt för header och meny ===== */
   header {
-    flex-direction: column;
+    flex-direction: column;  /* logga och nav staplas */
     align-items: center;
-    height: auto;
+    height: auto;           /* ta bort fast höjd */
     padding: 1rem;
   }
 
-  .header-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-
-  .site-logo-link {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-
   .site-logo {
-    height: 140px;
-    margin: 0 auto;
-    display: block;
+    height: 100px;           /* mindre logga på mobil */
   }
 
   nav {
-    position: static;
+    position: static;       /* ta bort absolute */
     transform: none;
-    margin-top: 0.75rem;
-    width: 100%;
+    margin-top: 1rem;
   }
 
   nav ul {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
+    flex-direction: column; /* menyposter vertikalt */
+    gap: 0.5rem;
     align-items: center;
-    justify-content: center;
-  }
-
-  nav a {
-    font-size: 0.9rem;
-    padding: 0.3rem 0.5rem;
   }
   
-  .hero {
-    padding: 3rem 1rem;
-  }
-
   .hero h1 {
-    font-size: 1.6rem;
-    line-height: 1.3;
-  }
-
-  .hero p {
-    font-size: 0.95rem;
-  }
-
-  .hero-btn {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.95rem;
-  }
-
-  /* Varför välja oss mobil */
-  .why-us-section {
-    padding: 1rem 0.5rem;
-  }
-
-  .why-us-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-
-  .why-us-item {
-    padding: 0.75rem 0.5rem;
-  }
-
-  .why-us-icon {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 0.5rem;
-  }
-
-  .why-us-icon i {
-    font-size: 1.3rem;
-  }
-
-  .why-us-item h3 {
-    font-size: 0.85rem;
-    margin-bottom: 0.25rem;
-  }
-
-  .why-us-item p {
-    font-size: 0.75rem;
-    display: none;
-  }
-
-  /* Tjänster grid mobil */
-  .services-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .service-box img {
-    height: 180px;
-  }
-
-  .service-box h3 {
-    font-size: 1rem;
-    padding: 0.75rem;
-  }
-
-  /* Container mobil */
-  .container {
-    padding: 1.5rem 1rem;
-  }
-
-  .container h2 {
-    font-size: 1.4rem;
-    margin-bottom: 1.5rem;
-  }
-
-  /* Formulär mobil */
-  .form-group {
-    padding: 0.6rem;
-  }
-
-  .form-group input,
-  .form-group select {
-    font-size: 16px; /* Förhindrar zoom på iOS */
-  }
-
-  .submit-btn {
-    padding: 0.8rem;
-    font-size: 1rem;
+    font-size: 2rem;
   }
 }
 
-/* ===== Extra liten mobil (under 480px) ===== */
-@media (max-width: 480px) {
-  header {
-    padding: 0.75rem;
-  }
+/* ===== Back to Top Button ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+  z-index: 1000;
+}
 
-  .site-logo {
-    height: 120px;
-  }
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
 
-  nav ul {
-    gap: 0.4rem 0.8rem;
-  }
+.back-to-top:hover {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+}
 
-  nav a {
-    font-size: 0.85rem;
-  }
-
-  .hero {
-    padding: 2.5rem 0.75rem;
-  }
-
-  .hero h1 {
-    font-size: 1.4rem;
-  }
-
-  .why-us-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-  }
-
-  .why-us-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .why-us-icon i {
-    font-size: 1.1rem;
-  }
-
-  .why-us-item h3 {
-    font-size: 0.75rem;
-  }
-
-  .container {
-    padding: 1rem 0.75rem;
-  }
-
-  .container h2 {
-    font-size: 1.2rem;
-  }
-
-  .service-box img {
-    height: 150px;
-  }
-
-  .reviews-section {
-    padding: 2rem 0.75rem;
-  }
-
-  .reviews-section h2 {
-    font-size: 1.3rem;
-  }
-
-  .review-card {
-    padding: 1rem;
-  }
-
-  footer {
-    padding: 2rem 1rem;
-  }
+.back-to-top:active {
+  transform: translateY(0);
 }

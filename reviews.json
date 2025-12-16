@@ -1,13 +1,6 @@
 {
   "reviews": [
     {
-      "name": "Barbro J.",
-      "date": "December 2025",
-      "text": "Blev vänligt och korrekt bemött. Jobbet utfördes på bästa sätt. Kan varmt rekommendera denna verkstad.",
-      "rating": 5,
-      "featured": true
-    },
-    {
       "name": "Mats W.",
       "date": "November 2025",
       "text": "Fixade svetsjobb som andra verkstäder sagt var omöjligt att göra. Toppenbetyg! Skjutsade oss dessutom hem när vi lämnade in bilen och levererade den lagad och klar hem till dörren. Otroligt fin service.",
@@ -22,39 +15,18 @@
       "featured": true
     },
     {
-      "name": "Komeyl A.",
-      "date": "November 2025",
-      "text": "Göteborgs Lack & Skadeverkstad levererade helt över förväntan. Otroligt noggranna, snabba ledtider och ett resultat som ser fabriksnytt ut. Kommunikationen var tydlig från start till slut.",
+      "name": "Barbro J.",
+      "date": "December 2025",
+      "text": "Blev vänligt och korrekt bemött. Jobbet utfördes på bästa sätt. Kan varmt rekommendera denna verkstad.",
       "rating": 5,
       "featured": true
     },
     {
-      "name": "Amir G.",
-      "date": "November 2025",
-      "text": "Bemötandet var proffsigt från start till mål, och personalen höll mig uppdaterad under hela processen. Bilen blev klar inom utlovad tid och resultatet blev verkligen över förväntan – lacken ser som ny ut.",
+      "name": "Felicia S.",
+      "date": "December 2025",
+      "text": "Bra och snabb hjälp med snyggt resultat! Bonus att de kunde hämta och lämna bilen hemma för att underlätta logistiken!",
       "rating": 5,
-      "featured": false
-    },
-    {
-      "name": "Oleg I.",
-      "date": "November 2025",
-      "text": "Utmärkt. Mycket hög kvalitet och snabb lackering. Lackering av en del av en bil.",
-      "rating": 5,
-      "featured": false
-    },
-    {
-      "name": "Mykola T.",
-      "date": "November 2025",
-      "text": "Detta företag lackerade min bil, de gjorde allt kvalitativt och mycket vackert. Service på hög nivå. Jag kommer att fortsätta använda detta företags tjänster om det behövs.",
-      "rating": 5,
-      "featured": false
-    },
-    {
-      "name": "Valerii K.",
-      "date": "November 2025",
-      "text": "Teknikern Yuri var mycket trevlig och kompetent. Arbetet utfördes med hög kvalitet, och som en trevlig bonus erbjöd de sig även att fixa några mindre problem på karossen. Kan varmt rekommendera.",
-      "rating": 5,
-      "featured": false
+      "featured": true
     }
   ]
 }
